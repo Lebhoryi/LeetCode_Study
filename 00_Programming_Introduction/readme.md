@@ -11,13 +11,22 @@
 - [1486. 数组异或操作](#1486-数组异或操作)
   - [天才位运算](#天才位运算)
   - [codings](#codings-4)
+- [1512. 好数对的数目](#1512-好数对的数目)
+  - [方案一 暴力枚举 O(n^2)](#方案一-暴力枚举-on2)
+  - [方案二 哈希表 O(n)](#方案二-哈希表-on)
+- [709. 转换成小写字母](#709-转换成小写字母)
+  - [codings](#codings-5)
+- [258. 各位相加](#258-各位相加)
+  - [codings](#codings-6)
+- [1281. 整数的各位积和之差](#1281-整数的各位积和之差)
+  - [codings](#codings-7)
 
 > 梦开始的地方
 
 * [leetcode 梦开始的编程之旅](https://leetcode.cn/studyplan/primers-list/)
 * 2026/01/05 进度 5/18，在 [1486. 数组异或操作](#1486-数组异或操作)
-* 2026/01/06 进度 5/18，在 [1486. 数组异或操作](#1486-数组异或操作)，学习天才位运算
-
+* 2026/01/07 进度 5/18，在 [1486. 数组异或操作](#1486-数组异或操作)，学习天才位运算
+* 2026/01/07 进度 10/18，[258. 各位数求和简直神了。](#258-各位相加)
 
 # 总结
 
@@ -240,6 +249,159 @@ public:
             ret ^= (start + 2*i);
         }
         return ret;
+    }
+};
+```
+
+---
+
+# 1512. 好数对的数目
+> [1512. 好数对的数目](https://leetcode.cn/problems/number-of-good-pairs/)
+> 
+> 简单
+> 
+> @date 2026-01-07 23:52
+
+## 方案一 暴力枚举 O(n^2)
+
+```python
+class Solution:
+    def numIdenticalPairs(self, nums: List[int]) -> int:
+        ret = 0
+        for i in range(len(nums)):
+            for j in range(i+1, len(nums)):
+                if nums[i] == nums[j]:
+                    ret += 1
+        return ret
+```
+
+## 方案二 哈希表 O(n)
+```python
+class Solution:
+    def numIdenticalPairs(self, nums: List[int]) -> int:
+        ret = 0
+        cnt = defaultdict(int)
+        for x in nums:
+            ret += cnt[x]
+            cnt[x] += 1
+        return ret
+```
+---
+```cpp
+class Solution {
+public:
+    int numIdenticalPairs(vector<int>& nums) {
+        int ret = 0;
+        unordered_map<int, int> cnt;
+        for (int x : nums) {
+            ret += cnt[x];
+            cnt[x]++;
+        }
+        return ret;
+    }
+};
+```
+
+---
+
+# 709. 转换成小写字母
+> [709. 转换成小写字母](https://leetcode.cn/problems/to-lower-case/)
+> 
+> 简单
+> 
+> @date 2026-01-07 32:30
+
+## codings
+```python
+class Solution:
+    def toLowerCase(self, s: str) -> str:
+        # return s.lower()
+        ans = ''
+        for ch in s:
+            if ord(ch) >= 65 and ord(ch) <= 90:
+                ans += chr(ord(ch) | 32)
+            else:
+                ans += ch
+        return ans
+```
+---
+```cpp
+class Solution {
+public:
+    string toLowerCase(string s) {
+        for (char& c : s) {
+            // if (c >= 'A' && c <= 'Z') {
+            //     c = c - 'A' + 'a';
+            // }
+            if (c >= 65 && c <= 90) {
+                c |= 32;
+            }
+        }
+        return s;
+    }
+};
+```
+---
+
+# 258. 各位相加
+> [258. 各位相加](https://leetcode.cn/problems/add-digits/)
+> 
+> 简单
+> 
+> @date 2026-01-07 23:42
+
+## codings
+
+> 灵神，这是一个数学问题。对9取余就是各位相加的结果。
+
+```python
+class Solution:
+    def addDigits(self, num: int) -> int:
+        return (num - 1) % 9 + 1 if num else 0
+```
+---
+```cpp
+class Solution {
+public:
+    int addDigits(int num) {
+        return (num - 1) % 9 + 1;
+    }
+};
+```
+
+# 1281. 整数的各位积和之差
+> [1281. 整数的各位积和之差](https://leetcode.cn/problems/subtract-the-product-and-sum-of-digits-of-an-integer/)
+> 
+> 简单
+> 
+> @date 2026-01-07 23:42
+
+## codings
+
+```python
+class Solution:
+    def subtractProductAndSum(self, n: int) -> int:
+        prod = 1
+        sum = 0
+        while n:
+            prod *= n % 10
+            sum += n % 10
+            n //= 10
+        return prod - sum
+```
+---
+```cpp
+class Solution {
+public:
+    int subtractProductAndSum(int n) {
+        int prod = 1;
+        int sum = 0;
+        while (n) {
+            prod *= n % 10;
+            sum += n % 10;
+            n /= 10;
+        }
+        return prod - sum;
     }
 };
 ```
