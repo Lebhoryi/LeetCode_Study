@@ -9,12 +9,14 @@
 - [2236. 判断根结点是否等于子结点之和](#2236-判断根结点是否等于子结点之和)
   - [codings](#codings-3)
 - [1486. 数组异或操作](#1486-数组异或操作)
+  - [天才位运算](#天才位运算)
   - [codings](#codings-4)
 
 > 梦开始的地方
 
 * [leetcode 梦开始的编程之旅](https://leetcode.cn/studyplan/primers-list/)
 * 2026/01/05 进度 5/18，在 [1486. 数组异或操作](#1486-数组异或操作)
+* 2026/01/06 进度 5/18，在 [1486. 数组异或操作](#1486-数组异或操作)，学习天才位运算
 
 
 # 总结
@@ -155,7 +157,69 @@ public:
 > 
 > @date 2026-01-06 23:42
 
+## 天才位运算
+
+> #灵神 #位运算
+
+给定 start, n, 计算 nums[i] = start + 2*i（下标从 0 开始）且 n == nums.length 。返回 nums 所有元素的异或。
+
+1. start 为偶数，最低位为0，异或结果为0，所有元素右移一位，异或，然后左移一位。不影响结果。$0⊕2⊕4⊕6⊕8=(0⊕1⊕2⊕3⊕4)⋅2=4⋅2=8$
+2. start 为奇数。当 n 为偶数时，最低位异或结果为0。当 n 为奇数时，最低位异或结果为1。分成两部分，start + 2*i - 1 同偶数，和 1。
+$$
+3⊕5⊕7⊕9⊕11=(1⊕2⊕3⊕4⊕5)⋅2+1=1⋅2+1=3
+$$
+$$
+3⊕5⊕7⊕9=(1⊕2⊕3⊕4)⋅2+0=4⋅2+0=8
+$$
+
+3. --> 根据1，2，得出公式，a = floor(start/2), b = 1 if n and start is odd else 0, $ret = a⊕(a+1)⊕...⊕(a+n-1)·2+b$
+
+4. $a⊕(a+1)⊕...⊕(a+n-1) = (0⊕1⊕2⊕...⊕(a+n-1))⊕(0⊕1⊕...⊕(a+1))$，因为 $0⊕0=0, 1⊕1=0$，结果转变成了求 0 到 a+n-1 的异或，再异或上 0 到 a+1 的异或.
+
+5. 0 到 n 的异或公式：
+$$
+\bigoplus_{i=0}^{n} i = 
+\begin{cases} 
+n, & n = 4k \\
+1, & n = 4k + 1 \\
+n + 1, & n = 4k + 2 \\
+0, & n = 4k + 3 
+\end{cases}
+$$
+
+6. 代码实现：
+
+```python
+class Solution:
+    def xorOperation(self, n: int, start: int) -> int:
+        xnor_n = lambda n: (n, 1, n+1, 0)[n % 4]
+        a = start // 2
+        b = n & start & 1
+        return (xnor_n(a+n-1) ^ xnor_n(a-1))*2 + b
+```
+
+```cpp
+class Solution {
+    int xnor_n (int n) {
+        switch (n % 4) {
+            case 0: return n;
+            case 1: return 1;
+            case 2: return n + 1;
+            default: return 0;
+        }
+    }
+
+public:
+    int xorOperation(int n, int start) {
+        int a = start / 2;
+        int b = n & start & 1;
+        return (xnor_n(a + n - 1) ^ xnor_n(a - 1)) * 2 + b;
+    }
+};
+```
+
 ## codings
+
 * python
 ```python
 class Solution:
